@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+      "lib": ["es5", "es6"],
+      "target": "es5",
+      "outDir": "build",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "forceConsistentCasingInFileNames": true,
+      "baseUrl": ".",
+      "paths": {
+          "@controllers/*": ["./src/controllers/*"],
+          "@route/*": ["./src/route/*"],
+          "@models/*": ["src/models/*"],
+          "@middleware/*": ["./src/middleware/*"],
+          "@decorator/*": ["./src/decorators/*"],
+          "@services/*": ["./src/services/*"],
+          "@config": ["./src/config/index"],
+          "@utils": ["./src/utils/index"],
+          "@error/*": ["./src/errors/*"],
+      }
+  },
+  "include": [
+      "src/**/*.ts"
+  ]
+}
