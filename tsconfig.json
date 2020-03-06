@@ -9,20 +9,10 @@
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "forceConsistentCasingInFileNames": true,
-      "baseUrl": ".",
-      "paths": {
-          "@controllers/*": ["./src/controllers/*"],
-          "@route/*": ["./src/route/*"],
-          "@models/*": ["src/models/*"],
-          "@middleware/*": ["./src/middleware/*"],
-          "@decorator/*": ["./src/decorators/*"],
-          "@services/*": ["./src/services/*"],
-          "@config": ["./src/config/index"],
-          "@utils": ["./src/utils/index"],
-          "@error/*": ["./src/errors/*"],
-      }
+      "downlevelIteration": true
   },
   "include": [
       "src/**/*.ts"
-  ]
+  ],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

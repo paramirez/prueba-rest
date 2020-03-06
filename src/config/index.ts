@@ -2,7 +2,9 @@ import appRoot from 'app-root-path';
 
 export const ENV = {
 	HTTP_PORT: process.env.HTTP_PORT || '5000',
-	DB_CONNECTION_STRING: 'db/database.json'
+	DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING || 'db/database.json',
+	AUTH_BASIC_USERNAME: process.env.AUTH_BASIC_USERNAME || 'admin',
+	AUTH_BASIC_PASSWORD: process.env.AUTH_BASIC_PASSWORD || 'admin'
 };
 
 const LOG_FILE_PATH = `${appRoot}/logs/app.log`;

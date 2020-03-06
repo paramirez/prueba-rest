@@ -1,5 +1,5 @@
 import { createLogger, transports, format } from 'winston';
-import { LOGGER_OPTIONS } from '@config';
+import { LOGGER_OPTIONS } from '../config';
 
 export const LOGGER = createLogger({
 	transports: [

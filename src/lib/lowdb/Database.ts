@@ -1,8 +1,8 @@
 import FileAsync from 'lowdb/adapters/FileAsync';
 import Lowdb from 'lowdb';
-import { LOGGER } from '@utils';
-import { ENV } from '@config';
-import { VehiculoModel } from '@models/Vehiculo';
+import { VehiculoModel } from '../../models/Vehiculo';
+import { ENV } from '../../config';
+import { LOGGER } from '../../utils';
 
 export interface Schema {
 	Vehiculos: VehiculoModel[];
@@ -30,20 +30,23 @@ export default class Database {
 			});
 	}
 
-	//Singleton connection
+	// Singleton connection
 	static async createConnection(): Promise<Connection> {
 		const db = await new Promise(
 			(resolve: (db: Connection) => void, reject) => {
 				if (!Database.Connection) {
-					new Database(ENV.DB_CONNECTION_STRING, (err, db) => {
-						if (err) {
-							LOGGER.error(err);
-							return reject(err);
+					const database = new Database(
+						ENV.DB_CONNECTION_STRING,
+						(err, newDB?: Connection) => {
+							if (err) {
+								LOGGER.error(err);
+								return reject(err);
+							}
+							LOGGER.info('Conexión a base de datos exitosa');
+							Database.Connection = newDB;
+							resolve(newDB);
 						}
-						LOGGER.info('Conexión a base de datos exitosa');
-						Database.Connection = db;
-						resolve(db);
-					});
+					);
 				} else resolve(Database.Connection);
 			}
 		);

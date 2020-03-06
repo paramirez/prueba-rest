@@ -1,6 +1,6 @@
-import { VehiculoEntity } from 'src/lib/lowdb/entities/Vehiculo';
 import { Service } from './Service';
-import { VehiculoModel } from '@models/Vehiculo';
+import { VehiculoModel } from '../models/Vehiculo';
+import { VehiculoEntity } from '../lib/lowdb/entities/Vehiculo';
 
 const ERRORS = {
 	VEHICULO_EXISTE: 'El vehículo ya existe',
@@ -52,7 +52,7 @@ export class VehiculoService extends Service {
 			return ERRORS.N_PLACA_INVALIDA;
 
 		return await vehiculoChain
-			.assign(<VehiculoModel>{ ...vehiculo, updatedAt: new Date() })
+			.assign({ ...vehiculo, updatedAt: new Date() } as VehiculoModel)
 			.write();
 	}
 
@@ -61,7 +61,7 @@ export class VehiculoService extends Service {
 
 		if (!vehiculoChain.value()) return ERRORS.VEHICULO_NO_EXISTE;
 		return vehiculoChain
-			.assign(<VehiculoModel>{ deleted: true, updatedAt: new Date() })
+			.assign({ deleted: true, updatedAt: new Date() } as VehiculoModel)
 			.write();
 	}
 

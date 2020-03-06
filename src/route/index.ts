@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { RequestHandlerType, Request, Response, Next, Server } from 'restify';
-import { RouteDefinition } from '@decorator/Controller';
-import { ErrorMiddleware } from '@middleware/Error';
+import { RouteDefinition } from '../decorators/Controller';
 
 /**
  * @author Pablo Ramírez
@@ -20,11 +19,8 @@ export function GetRouterByControllerList(server: Server, Controllers: any[]) {
 	Controllers.forEach(controller => {
 		const instance = new controller();
 		const prefix = Reflect.getMetadata('prefix', controller);
-		const routes: Array<RouteDefinition> = Reflect.getMetadata(
-			'routes',
-			controller
-		);
-		const middlewares: Array<RequestHandlerType> = Reflect.getMetadata(
+		const routes: RouteDefinition[] = Reflect.getMetadata('routes', controller);
+		const middlewares: RequestHandlerType[] = Reflect.getMetadata(
 			'middlewares',
 			controller
 		);

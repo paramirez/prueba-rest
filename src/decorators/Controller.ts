@@ -13,21 +13,22 @@ export interface RouteDefinition {
 	path: string;
 	requestMethod: RequestMethod;
 	methodName: string;
-	middlewares: Array<RequestHandlerType>;
+	middlewares: RequestHandlerType[];
 }
 
 function httpMethod(
 	requestMethod: RequestMethod,
 	path: string,
-	middlewares?: Array<RequestHandlerType>
+	middlewares?: RequestHandlerType[]
 ) {
-	return function(target, propertyKey: string): void {
+	return (target, propertyKey: string): void => {
 		if (!Reflect.hasMetadata('routes', target.constructor)) {
 			Reflect.defineMetadata('routes', [], target.constructor);
 		}
-		const routes = Reflect.getMetadata('routes', target.constructor) as Array<
-			RouteDefinition
-		>;
+		const routes = Reflect.getMetadata(
+			'routes',
+			target.constructor
+		) as RouteDefinition[];
 		routes.push({
 			requestMethod,
 			path,
@@ -45,11 +46,8 @@ function httpMethod(
  * @param prefix
  * @param middlewares
  */
-export function Controller(
-	prefix: string,
-	middlewares?: Array<RequestHandlerType>
-) {
-	return function(target: any) {
+export function Controller(prefix: string, middlewares?: RequestHandlerType[]) {
+	return (target: any) => {
 		Reflect.defineMetadata('prefix', prefix, target);
 
 		if (!Reflect.hasMetadata('routes', target)) {
@@ -66,37 +64,22 @@ export function Controller(
 
 // Decoradores de método, especifica un método http
 
-export function Get(
-	definition: string,
-	middlewares?: Array<RequestHandlerType>
-) {
+export function Get(definition: string, middlewares?: RequestHandlerType[]) {
 	return httpMethod(RequestMethod.GET, definition, middlewares);
 }
 
-export function Post(
-	definition: string,
-	middlewares?: Array<RequestHandlerType>
-) {
+export function Post(definition: string, middlewares?: RequestHandlerType[]) {
 	return httpMethod(RequestMethod.POST, definition, middlewares);
 }
 
-export function Put(
-	definition: string,
-	middlewares?: Array<RequestHandlerType>
-) {
+export function Put(definition: string, middlewares?: RequestHandlerType[]) {
 	return httpMethod(RequestMethod.PUT, definition, middlewares);
 }
 
-export function Delete(
-	definition: string,
-	middlewares?: Array<RequestHandlerType>
-) {
+export function Delete(definition: string, middlewares?: RequestHandlerType[]) {
 	return httpMethod(RequestMethod.DELETE, definition, middlewares);
 }
 
-export function Patch(
-	definition: string,
-	middlewares?: Array<RequestHandlerType>
-) {
+export function Patch(definition: string, middlewares?: RequestHandlerType[]) {
 	return httpMethod(RequestMethod.PATCH, definition, middlewares);
 }

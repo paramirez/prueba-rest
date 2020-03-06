@@ -5,37 +5,38 @@
   "description": "Proyecto que implenta la solución al problema planteado en la prueba de Assist Consultores",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "start": "node build/app",
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",
-    "dev": "ts-node -r tsconfig-paths/register src/app.ts"
+    "dev": "ts-node src/app.ts"
   },
   "keywords": [
     "nodejs",
     "typescript"
   ],
   "dependencies": {
-    "@types/bunyan": "^1.8.6",
-    "@types/restify-errors": "^4.3.3",
     "app-root-path": "^3.0.0",
-    "bunyan": "^1.8.12",
+    "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "lowdb": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "restify": "^8.5.1",
     "restify-errors": "^8.0.2",
+    "ts-jest": "^25.2.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/winston": "^2.4.4",
+    "@types/axios": "^0.14.0",
+    "@types/jest": "^25.1.3",
     "@types/lowdb": "^1.0.9",
     "@types/node": "^13.7.7",
     "@types/restify": "^8.4.2",
+    "@types/restify-errors": "^4.3.3",
+    "@types/winston": "^2.4.4",
     "jest": "^25.1.0",
     "supertest": "^4.0.2",
     "ts-node": "^8.6.2",
-    "tsconfig-paths": "^3.9.0",
     "tslint": "^6.0.0",
     "typescript": "^3.8.3"
   },

@@ -1,15 +1,14 @@
-import { Controller, Get, Post, Put, Delete } from '@decorator/Controller';
 import { Request, Response, Next } from 'restify';
+import { BadRequestError } from 'restify-errors';
+import { AuthMiddleware } from '../middleware/Auth';
+import { Controller, Get, Post, Put, Delete } from '../decorators/Controller';
 import {
-	BadRequestError,
-	InternalServerError,
-	NotFoundError
-} from 'restify-errors';
-import { LOGGER } from '@utils';
-import { VehiculoService, VehiculoErrorTypes } from '@services/VehiculoService';
-import { VehiculoModel } from '@models/Vehiculo';
+	VehiculoService,
+	VehiculoErrorTypes
+} from '../services/VehiculoService';
+import { VehiculoModel } from '../models/Vehiculo';
 
-@Controller('/vehiculo')
+@Controller('/vehiculo', [AuthMiddleware])
 export default class VehiculoController {
 	private vehiculoService: VehiculoService;
 
@@ -18,32 +17,10 @@ export default class VehiculoController {
 		this.vehiculoService.load();
 	}
 
-	@Get('/todos')
-	async vehiculos(req: Request, res: Response, next: Next) {
-		try {
-			let { incluirBorrados } = <{ incluirBorrados: number }>req.query;
-
-			if (incluirBorrados && typeof incluirBorrados === 'string') {
-				try {
-					incluirBorrados = parseInt(incluirBorrados);
-				} catch (error) {
-					throw new BadRequestError('deleted debe ser un valor entre 0 y 1');
-				}
-			}
-
-			const vehiculos = await this.vehiculoService.TraerTodosLosVehiculos(
-				incluirBorrados
-			);
-			return res.json({ vehiculos });
-		} catch (error) {
-			next(error);
-		}
-	}
-
 	@Get('/:placa')
 	async vehiculoPorPlaca(req: Request, res: Response, next: Next) {
 		try {
-			const { placa } = <{ placa: string }>req.params;
+			const { placa } = req.params as { placa: string };
 			const resultado = this.vehiculoService.ConsultarVehiculoPorPlaca(placa);
 
 			if (typeof resultado === 'string') {
@@ -58,10 +35,32 @@ export default class VehiculoController {
 		}
 	}
 
+	@Get('/')
+	async vehiculos(req: Request, res: Response, next: Next) {
+		try {
+			let { incluirBorrados } = req.query as { incluirBorrados: number };
+
+			if (incluirBorrados && typeof incluirBorrados === 'string') {
+				try {
+					incluirBorrados = parseInt(incluirBorrados, 10);
+				} catch (error) {
+					throw new BadRequestError('deleted debe ser un valor entre 0 y 1');
+				}
+			}
+
+			const vehiculos = await this.vehiculoService.TraerTodosLosVehiculos(
+				incluirBorrados
+			);
+			return res.json({ vehiculos });
+		} catch (error) {
+			next(error);
+		}
+	}
+
 	@Post('/')
 	async crearVehiculo(req: Request, res: Response, next: Next) {
 		try {
-			const vehiculo = <VehiculoModel>req.body;
+			const vehiculo = req.body as VehiculoModel;
 
 			if (!vehiculo || !vehiculo.placa || !vehiculo.modelo || !vehiculo.marca)
 				throw new BadRequestError('placa, modelo y marca son requeridos');
@@ -79,8 +78,8 @@ export default class VehiculoController {
 	@Put('/:placa')
 	async actualizarVehiculo(req: Request, res: Response, next: Next) {
 		try {
-			const { placa } = <{ placa: string }>req.params;
-			const vehiculo = <VehiculoModel>req.body;
+			const { placa } = req.params as { placa: string };
+			const vehiculo = req.body as VehiculoModel;
 
 			if (!vehiculo && !vehiculo.placa && !vehiculo.modelo && !vehiculo.marca)
 				throw new BadRequestError(
@@ -102,7 +101,7 @@ export default class VehiculoController {
 	@Delete('/:placa')
 	async eliminarVehiculo(req: Request, res: Response, next: Next) {
 		try {
-			const { placa } = <{ placa: string }>req.params;
+			const { placa } = req.params as { placa: string };
 			const resultado = await this.vehiculoService.DeshabilitarVehiculo(placa);
 
 			if (typeof resultado === 'string') throw new BadRequestError(resultado);
